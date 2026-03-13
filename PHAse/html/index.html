@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHAse</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+  <div id="menu-toggle"><span></span><span></span><span></span></div>
+</header>
+
+<nav id="nav">
+  <a href="index.html">Home</a>
+  <a href="login.html" class="login-link">Perfil</a>
+  <a href="#">Notas</a>
+  <a href="#">Boletim</a>
+  <a href="phase1.html">PHAse1/a>
+  <a href="#" class="logout-link" style="display:none;">Sair</a>
+</nav>
+
+<div class="overlay"></div>
+
+<main class="home-container">
+  <h1 class="site-title">PHAse</h1>
+  <div class="intro-text">
+    <p>Aprenda no seu ritmo, evolua a cada PHAse</p>
+  </div>
+
+  <div class="action-buttons">
+    <a href="login.html" class="btn btn-login login-link">Login</a>
+    <span class="or-text login-link">ou</span>
+    <a href="register.html" class="btn btn-register register-link">Cadastrar-se</a>
+    <button class="btn btn-login logout-link" style="display:none;">Sair</button>
+  </div>
+</main>
+
+<script src="../js/menu.js"></script>
+<script>
+  // Verifica se usuário está logado
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+
+  const loginLinks = document.querySelectorAll('.login-link');
+  const registerLinks = document.querySelectorAll('.register-link');
+  const logoutLinks = document.querySelectorAll('.logout-link');
+
+  if(usuarioLogado) {
+    // Oculta login e registro
+    loginLinks.forEach(el => el.style.display = 'none');
+    registerLinks.forEach(el => el.style.display = 'none');
+
+    // Mostra logout
+    logoutLinks.forEach(el => el.style.display = 'inline-block');
+
+    // Configura logout
+    logoutLinks.forEach(el => {
+      el.addEventListener('click', () => {
+        localStorage.removeItem('usuarioLogado');
+        location.reload(); // Atualiza página
+      });
+    });
+  }
+</script>
+</body>
+</html>

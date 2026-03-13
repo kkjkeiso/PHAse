@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHAse | PHAse1</title>
+<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header>
+  <div id="menu-toggle"><span></span><span></span><span></span></div>
+</header>
+
+<nav id="nav">
+  <a href="index.html">Home</a>
+  <a href="login.html" id="login-link">Conta</a>
+  <a href="#">Notas</a>
+  <a href="#">Boletim</a>
+  <a href="educash.html">EduCash</a>
+  <a href="#" id="logout-btn">Sair</a>
+</nav>
+<div class="overlay"></div>
+
+<main class="home-container">
+  <h1 class="site-title">PHAse1</h1>
+
+  <div id="not-logged-message" style="display:none; color: var(--accent); font-weight: 600; text-align:center; margin-bottom:24px;">
+    Logue primeiro para acessar o EduCash.
+  </div>
+
+  <!-- Botões de login e cadastro lado a lado -->
+  <div id="login-register-buttons" class="action-buttons" style="display:none;">
+    <a href="login.html" class="btn btn-login" id="login-btn">Login</a>
+    <span class="or-text">ou</span>
+    <a href="register.html" class="btn btn-register" id="register-btn">Cadastrar-se</a>
+  </div>
+
+  <div id="educash-content" style="display:none;">
+    <div class="intro-text">
+      <p>Bem-vindo ao EduCash! Aqui você encontrará dicas e informações sobre educação financeira, controle de gastos, investimentos e planejamento financeiro para estudantes.</p>
+      <p>Aprender a lidar com dinheiro desde cedo é essencial para tomar decisões conscientes e garantir um futuro estável.</p>
+    </div>
+
+    <div class="videos">
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/3DdR5LchPug" title="EduCash Video 1" frameborder="0" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/5QgH8Y6n0nM" title="EduCash Video 2" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+</main>
+
+<script src="../JS/menu.js"></script>
+<script>
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  const educashContent = document.getElementById('educash-content');
+  const notLoggedMessage = document.getElementById('not-logged-message');
+  const loginRegisterButtons = document.getElementById('login-register-buttons');
+  const loginLink = document.getElementById('login-link');
+  const registerLink = document.getElementById('register-link');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  if(usuarioLogado){
+    educashContent.style.display = 'block';
+    notLoggedMessage.style.display = 'none';
+    loginRegisterButtons.style.display = 'none';
+    if(loginLink) loginLink.style.display = 'none';
+    if(registerLink) registerLink.style.display = 'none';
+  } else {
+    educashContent.style.display = 'none';
+    notLoggedMessage.style.display = 'block';
+    loginRegisterButtons.style.display = 'flex';
+  }
+
+  // Logout
+  if(logoutBtn){
+    logoutBtn.addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('usuarioLogado');
+      alert('Você saiu da sua conta.');
+      window.location.href = 'index.html';
+    });
+  }
+</script>
+</body>
+</html>
