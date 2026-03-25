@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conta • PHAse</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<script>
+  if (!localStorage.getItem('usuarioLogado')) {
+    window.location.replace('./welcome.html');
+  }
+</script>
+
+<div class="page-content">
+  <div class="index-grid">
+
+    <!-- ── Hero da conta ────────────────────────────── -->
+    <div class="hero-card index-hero">
+      <div class="index-hero-body">
+
+        <div>
+          <p class="index-greeting">
+            Sua conta, <span id="username">aluno</span>
+          </p>
+          <span style="font-family:'TTMilks',sans-serif; font-size:2.8rem;">
+            Gerenciamento
+          </span>
+        </div>
+
+        <div class="index-stats">
+          <div class="index-stat">
+            <span class="index-stat-num" id="stat-pts">0</span>
+            <span class="index-stat-label">Pontos</span>
+          </div>
+          <div class="index-stat">
+            <span class="index-stat-num" id="stat-quiz">0</span>
+            <span class="index-stat-label">Questionários</span>
+          </div>
+        </div>
+
+        <p class="hero-sub">
+          Gerencie sua conta, visualize seus dados e controle sua sessão na plataforma.
+        </p>
+
+        <div class="index-quick-actions">
+          <button class="quick-btn" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Sair
+          </button>
+        </div>
+
+      </div>
+
+      <p class="hero-title">Account control</p>
+    </div>
+
+    <!-- ── Cards ───────────────────────────────────── -->
+    <div class="index-cards">
+
+      <!-- Dados do usuário -->
+      <div class="card">
+        <span class="ext-title">Informações</span>
+        <p class="ext-desc"><strong>Usuário:</strong> <span id="info-username"></span></p>
+        <p class="ext-desc"><strong>Email:</strong> <span id="info-email"></span></p>
+      </div>
+
+      <!-- Segurança -->
+      <div class="card">
+        <span class="ext-title">Segurança</span>
+        <p class="ext-desc">Sua senha está protegida com criptografia avançada.</p>
+      </div>
+
+      <!-- Sessão -->
+      <div class="card">
+        <span class="ext-title">Sessão</span>
+        <p class="ext-desc">Você está logado neste dispositivo.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="../js/nav.js"></script>
+
+<script>
+  const API = "http://localhost:3000";
+
+  async function loadUser() {
+    const res = await fetch(API + "/me", { credentials: "include" });
+
+    if (res.status !== 200) {
+      localStorage.removeItem('usuarioLogado');
+      window.location.replace('./welcome.html');
+      return;
+    }
+
+    const user = await res.json();
+
+    document.getElementById('username').textContent = user.username;
+    document.getElementById('info-username').textContent = user.username;
+    document.getElementById('info-email').textContent = user.email;
+
+    localStorage.setItem('usuarioLogado', user.username);
+  }
+
+  async function logout() {
+    await fetch(API + "/logout", {
+      method: "POST",
+      credentials: "include"
+    });
+
+    localStorage.removeItem('usuarioLogado');
+    window.location.replace('./welcome.html');
+  }
+
+  // stats locais (mantive teu padrão)
+  document.getElementById('stat-pts').textContent  = localStorage.getItem('phase1_points')  || '0';
+  document.getElementById('stat-quiz').textContent = localStorage.getItem('phase1_quizzes') || '0';
+
+  loadUser();
+</script>
+
+</body>
+</html>

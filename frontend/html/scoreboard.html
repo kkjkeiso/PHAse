@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHAse | Scoreboard</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .scoreboard-stack > * {
+      animation: fadeUp 0.5s ease both;
+    }
+    .scoreboard-stack > *:nth-child(1) { animation-delay: 0.0s; }
+    .scoreboard-stack > *:nth-child(2) { animation-delay: 0.1s; }
+
+    /* Hero card scoreboard */
+    .scoreboard-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .scoreboard-hero-left { display: flex; flex-direction: column; gap: 8px; }
+
+    .scoreboard-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--success);
+      background: rgba(61,220,132,0.1);
+      border: 1px solid rgba(61,220,132,0.22);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .scoreboard-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* Top 3 podium */
+    .scoreboard-podium {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 12px;
+      padding: 32px 0 8px;
+    }
+
+    .podium-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .podium-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--surface-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+
+    .podium-item.first .podium-avatar { width: 64px; height: 64px; font-size: 1.4rem; border-color: #ffc800; box-shadow: 0 0 20px rgba(255,200,0,0.25); }
+    .podium-item.second .podium-avatar { border-color: #b4b4b4; }
+    .podium-item.third .podium-avatar  { border-color: #c8783c; }
+
+    .podium-name { font-size: 0.78rem; font-weight: 700; color: var(--text); max-width: 80px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .podium-pts  { font-size: 0.72rem; color: var(--text-muted); }
+
+    .podium-bar {
+      border-radius: 8px 8px 0 0;
+      width: 60px;
+    }
+
+    .podium-item.first  .podium-bar { height: 70px; background: rgba(255,200,0,0.15); border: 1px solid rgba(255,200,0,0.3); }
+    .podium-item.second .podium-bar { height: 50px; background: rgba(180,180,180,0.10); border: 1px solid rgba(180,180,180,0.2); }
+    .podium-item.third  .podium-bar { height: 36px; background: rgba(200,120,60,0.10); border: 1px solid rgba(200,120,60,0.2); }
+
+    /* Scoreboard table improved */
+    .scoreboard-table tbody tr { transition: background var(--transition); }
+    .scoreboard-table tbody tr:last-child td { border-bottom: none; }
+
+    .player-cell { display: flex; align-items: center; gap: 10px; }
+    .player-initial {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--surface-hover);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* Progress card improvements */
+    .progress-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .progress-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: rgba(124,109,250,0.15);
+      border: 1px solid rgba(124,109,250,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 700; color: var(--accent);
+    }
+
+    @media (max-width: 600px) {
+      .scoreboard-podium { gap: 8px; }
+      .podium-bar { width: 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-content">
+    <div class="scoreboard-stack">
+
+      <!-- Hero -->
+      <div class="hero-card">
+        <div class="scoreboard-hero">
+          <div class="scoreboard-hero-left">
+            <span class="scoreboard-live-badge">
+              <span class="scoreboard-live-dot"></span> Ao vivo
+            </span>
+            <span class="scoreboard-title">Scoreboard</span>
+            <p class="hero-sub">Acompanhe o ranking geral e o seu progresso individual em cada PHAse.</p>
+          </div>
+          <i class="fa-solid fa-ranking-star" style="font-size:3.5rem; color:rgba(124,109,250,0.2);"></i>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="scoreboard-grid">
+
+        <!-- Ranking table -->
+        <div class="card" style="padding: 0; overflow: hidden;">
+          <div style="padding: 28px 32px 20px; border-bottom: 1px solid var(--border);">
+            <p class="card-label" style="margin-bottom:6px;">Ranking Geral</p>
+            <div id="podium-area" style="display:none;">
+              <div class="scoreboard-podium" id="podium"></div>
+            </div>
+          </div>
+          <table class="scoreboard-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Aluno</th>
+                <th>PHAses</th>
+                <th>Pontuação</th>
+              </tr>
+            </thead>
+            <tbody id="ranking-body">
+              <tr>
+                <td colspan="4" class="scoreboard-empty">Nenhum dado disponível ainda.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Progress -->
+        <div class="card scoreboard-progress">
+          <p class="card-label">Seu Progresso</p>
+
+          <div id="progress-logged-out" class="progress-loggedout">
+            <i class="fa-solid fa-user-lock" style="font-size:2rem; color:var(--text-muted);"></i>
+            <p class="hero-sub" style="font-size:0.9rem;">
+              Faça login para ver seu progresso e aparecer no ranking.
+            </p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+              <a href="./login.html"    class="btn btn-register">Entrar</a>
+              <a href="./register.html" class="btn btn-login">Cadastrar</a>
+            </div>
+          </div>
+
+          <div id="progress-content" class="progress-content" style="display:none;">
+            <div class="progress-header">
+              <div class="progress-avatar" id="progress-avatar"></div>
+              <div>
+                <p class="progress-username" id="progress-username"></p>
+                <p style="font-size:0.78rem; color:var(--text-muted);" id="progress-pts-label"></p>
+              </div>
+            </div>
+
+            <div class="progress-phases">
+              <div class="progress-row">
+                <span class="hero-sub" style="font-size:0.875rem;">PHAse 1 — ENEM</span>
+                <span id="phase1-status" class="progress-value">—</span>
+              </div>
+              <div class="progress-row">
+                <span class="hero-sub" style="font-size:0.875rem;">PHAse 2 — Técnico</span>
+                <span class="progress-value--locked">Indisponível</span>
+              </div>
+              <div class="progress-row">
+                <span class="hero-sub" style="font-size:0.875rem;">PHAse 3 — Livre</span>
+                <span class="progress-value--locked">Em breve</span>
+              </div>
+            </div>
+
+            <a href="./plans.html" class="btn btn-register" style="text-align:center; margin-top:auto;">
+              <i class="fa-solid fa-crown"></i> Ver planos
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/nav.js"></script>
+  <script>
+    const usuario   = localStorage.getItem('usuarioLogado');
+    const loggedOut = document.getElementById('progress-logged-out');
+    const content   = document.getElementById('progress-content');
+
+    if (usuario) {
+      loggedOut.style.display = 'none';
+      content.style.display   = 'flex';
+
+      const initial = usuario.charAt(0).toUpperCase();
+      document.getElementById('progress-avatar').textContent    = initial;
+      document.getElementById('progress-username').textContent  = usuario;
+
+      const pts     = parseInt(localStorage.getItem('phase1_points')  || '0');
+      const quizzes = parseInt(localStorage.getItem('phase1_quizzes') || '0');
+      document.getElementById('progress-pts-label').textContent = pts + ' pontos acumulados';
+
+      const statusEl = document.getElementById('phase1-status');
+      statusEl.textContent = pts > 0 || quizzes > 0
+        ? pts + ' pts · ' + quizzes + ' quest.'
+        : 'Não iniciado';
+      if (pts === 0 && quizzes === 0) {
+        statusEl.style.color = 'var(--text-muted)';
+        statusEl.style.fontWeight = '600';
+      }
+    } else {
+      loggedOut.style.display = 'flex';
+      content.style.display   = 'none';
+    }
+  </script>
+
+</body>
+</html>
